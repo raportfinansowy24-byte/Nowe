@@ -80,6 +80,65 @@ const TOPIC_PRESETS = [
   }
 ];
 
+const SWIPE_FILE_HOOKS = [
+  {
+    id: 'swipe-1',
+    category: 'Banki & Oszczędności',
+    formula: 'contrarian_claim' as const,
+    title: 'Banki NIE chcą, żebyś o tym wiedział',
+    hookText: 'Banki nie chcą, żebyś znał ten prosty trick oszczędnościowy na koncie',
+    impact: '⚡ High Virality (+85% w 3s)'
+  },
+  {
+    id: 'swipe-2',
+    category: 'Banki & Oszczędności',
+    formula: 'mistake_warning' as const,
+    title: 'Stop! Lokata 0.01% to strata kapitału',
+    hookText: 'Stop! Jeśli trzymasz oszczędności na zwykłym koncie, inflacja zjada Twój kapitał każdego dnia',
+    impact: '⚠️ Warning (+90% w 3s)'
+  },
+  {
+    id: 'swipe-3',
+    category: 'Giełda GPW & ETF',
+    formula: 'transformation' as const,
+    title: 'Co się stanie po 10 latach inwestowania 100 zł',
+    hookText: 'Co się stanie, gdy zamiast w banku, zainwestujesz 100 zł miesięcznie w indeks WIG20 lub ETF',
+    impact: '📈 Data Transformation (+95% w 3s)'
+  },
+  {
+    id: 'swipe-4',
+    category: 'Giełda GPW & ETF',
+    formula: 'mistake_warning' as const,
+    title: '5 błędów początkujących inwestorów na GPW',
+    hookText: 'Pięć kosztownych błędów, które popełnia 90% początkujących inwestorów na giełdzie',
+    impact: '⚠️ High Retention (+88% w 3s)'
+  },
+  {
+    id: 'swipe-5',
+    category: 'Podatki & Budżet',
+    formula: 'list_tease' as const,
+    title: '3 ulgi podatkowe, o których nie mówi księgowy',
+    hookText: 'Trzy legalne ulgi podatkowe w Polsce, o których nie dowiesz się od przeciętnego księgowego',
+    impact: '📋 List Tease (+92% w 3s)'
+  },
+  {
+    id: 'swipe-6',
+    category: 'Kredyty & RPP',
+    formula: 'contrarian_claim' as const,
+    title: 'Stopy procentowe RPP a Twój kredyt',
+    hookText: 'Stopy procentowe znów w centrum uwagi – zobacz co RPP ukrywa przed polskimi kredytobiorcami',
+    impact: '⚡ Urgent (+87% w 3s)'
+  },
+  {
+    id: 'swipe-7',
+    category: 'Psychologia Pieniędzy',
+    formula: 'myth_buster' as const,
+    title: 'Obalamy mit oszczędzania na małej kawie',
+    hookText: 'Obalamy powszechny mit: oszczędzanie na drobnych przyjemnościach NIE uczyni Cię bogatym',
+    impact: '💡 Myth Buster (+84% w 3s)'
+  }
+];
+
 export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScriptToEditor, onJobStarted, onToast }) => {
   const [activeMode, setActiveMode] = useState<'create' | 'translate'>('create');
   const [topic, setTopic] = useState('Dlaczego rynki finansowe nagradzają dyscyplinę, a nie emocje');
@@ -87,6 +146,12 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
   const [targetLanguage, setTargetLanguage] = useState('Polski');
   const [sceneCount, setSceneCount] = useState(2);
   const [resolution, setResolution] = useState('720x1280');
+
+  // Viral Strategy 2026 Hook Formula State
+  const [viralHookFormula, setViralHookFormula] = useState<
+    'contrarian_claim' | 'mistake_warning' | 'list_tease' | 'transformation' | 'myth_buster'
+  >('contrarian_claim');
+  const [showSwipeFileModal, setShowSwipeFileModal] = useState<boolean>(false);
 
   // Bankier.pl Live News State
   const [selectedBankierArticle, setSelectedBankierArticle] = useState<BankierArticle | null>(null);
@@ -368,6 +433,7 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
           body: JSON.stringify({
             topic,
             niche,
+            viralHookFormula,
             articleContext: buildArticleContextString(selectedBankierArticle),
             language: targetLanguage,
             outputResolution: resolution,
@@ -429,6 +495,7 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
           body: JSON.stringify({
             topic,
             niche,
+            viralHookFormula,
             articleContext: buildArticleContextString(selectedBankierArticle),
             language: targetLanguage,
             sceneCount
@@ -623,6 +690,84 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
                     <span className="text-white font-mono font-semibold">
                       „Sprawdź na raport-finansowy24.pl”
                     </span>
+                  </div>
+
+                  {/* 🚀 VIRAL STRATEGY 2026: Hook Formula Selector */}
+                  <div className="space-y-2.5 pt-3.5 mt-3 border-t border-slate-800/80">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <label className="text-xs font-bold text-amber-300 flex items-center gap-1.5 uppercase tracking-wide">
+                        <Flame className="w-4 h-4 text-amber-400" />
+                        Formuła Hooka (Pierwsze 2 sekundy = Virality 2026):
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowSwipeFileModal(true)}
+                        className="text-[11px] font-bold text-indigo-300 hover:text-indigo-200 bg-indigo-950/80 border border-indigo-500/40 hover:border-indigo-400 px-2.5 py-1 rounded-lg transition flex items-center gap-1.5 shadow-sm active:scale-95"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-indigo-400 animate-pulse" />
+                        <span>Baza 20+ Hooków (Swipe File)</span>
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                      {[
+                        {
+                          id: 'contrarian_claim',
+                          icon: '⚡',
+                          label: 'Contrarian Claim',
+                          formula: 'Banki NIE chcą...',
+                          desc: 'Zaskakujący fakt wbrew opinii'
+                        },
+                        {
+                          id: 'mistake_warning',
+                          icon: '⚠️',
+                          label: 'Mistake Warning',
+                          formula: 'Stop! Robisz błąd...',
+                          desc: 'Ostrzeżenie przed stratą'
+                        },
+                        {
+                          id: 'list_tease',
+                          icon: '📋',
+                          label: 'Ranking / Lista',
+                          formula: '3 rzeczy / błędy...',
+                          desc: 'Chęć zobaczenia całości'
+                        },
+                        {
+                          id: 'transformation',
+                          icon: '📈',
+                          label: 'Przed i Po',
+                          formula: '100 PLN ➔ 180k...',
+                          desc: 'Mocne zestawienie danych'
+                        },
+                        {
+                          id: 'myth_buster',
+                          icon: '💡',
+                          label: 'Obalanie Mitów',
+                          formula: 'Obalamy mit o...',
+                          desc: 'Walka z fałszywą opinią'
+                        }
+                      ].map((f) => (
+                        <button
+                          key={f.id}
+                          type="button"
+                          onClick={() => setViralHookFormula(f.id as any)}
+                          className={`p-2.5 text-left rounded-xl border text-xs transition flex flex-col justify-between gap-1.5 ${
+                            viralHookFormula === f.id
+                              ? 'bg-amber-500/20 border-amber-500 text-amber-200 font-bold shadow-md shadow-amber-950/40 ring-1 ring-amber-500/60'
+                              : 'bg-slate-950/80 border-slate-800 text-slate-400 hover:border-amber-500/40 hover:text-slate-200'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-base">{f.icon}</span>
+                            {viralHookFormula === f.id && (
+                              <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
+                            )}
+                          </div>
+                          <span className="font-bold text-white text-[11px] leading-tight">{f.label}</span>
+                          <span className="text-[10px] text-amber-300/90 font-mono font-medium line-clamp-1">{f.formula}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -1421,6 +1566,88 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
           </div>
         </motion.div>
       )}
+
+      {/* 🚀 VIRAL STRATEGY 2026: Swipe File Modal */}
+      <AnimatePresence>
+        {showSwipeFileModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="bg-slate-900 border border-amber-500/30 rounded-3xl p-6 max-w-2xl w-full shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                    <Flame className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-extrabold text-white flex items-center gap-2">
+                      Baza Viralowych Hooków Finansowych (Swipe File 2026)
+                    </h3>
+                    <p className="text-xs text-slate-400">
+                      Sprawdzone nagłówki z wysokim wskaźnikiem retencji dla portalu <strong className="text-amber-300">raport-finansowy24.pl</strong>
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setShowSwipeFileModal(false)}
+                  className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Swipe File Items Grid */}
+              <div className="space-y-3">
+                {SWIPE_FILE_HOOKS.map((hook) => (
+                  <div
+                    key={hook.id}
+                    className="p-4 bg-slate-950 border border-slate-800 hover:border-amber-500/50 rounded-2xl transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                  >
+                    <div className="space-y-1 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="px-2 py-0.5 rounded bg-slate-800 text-[10px] font-bold text-amber-300">
+                          {hook.category}
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-indigo-950 border border-indigo-500/30 text-indigo-300 text-[10px] font-semibold">
+                          {hook.impact}
+                        </span>
+                      </div>
+                      <h4 className="text-xs font-bold text-white group-hover:text-amber-200 transition">
+                        "{hook.hookText}"
+                      </h4>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setTopic(hook.hookText);
+                        setViralHookFormula(hook.formula);
+                        setShowSwipeFileModal(false);
+                        onToast?.('success', 'Wczytano Hook Viralowy', `Ustawiono temat: "${hook.title}"`);
+                      }}
+                      className="px-3.5 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition shrink-0 shadow-md shadow-amber-950/40"
+                    >
+                      <Zap className="w-3.5 h-3.5 fill-slate-950" />
+                      Graj Ten Hook
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Footer info */}
+              <div className="pt-3 border-t border-slate-800 text-center text-[11px] text-slate-500 flex items-center justify-between">
+                <span>Kliknij dowolny hook, aby natychmiast uzupełnić generator.</span>
+                <span className="text-amber-400 font-mono font-semibold">raport-finansowy24.pl</span>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

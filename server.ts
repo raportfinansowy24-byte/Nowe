@@ -2077,31 +2077,46 @@ async function generateSmartOrGeminiViralScript({
   niche = 'Finanse & Biznes',
   language = 'Polski',
   sceneCount = 2,
-  articleContext
+  articleContext,
+  viralHookFormula
 }: {
   topic?: string;
   niche?: string;
   language?: string;
   sceneCount?: number;
   articleContext?: string;
+  viralHookFormula?: string;
 }) {
   const cleanTopic = (topic || 'Analiza rynkowa').trim();
   const count = Math.min(Math.max(Number(sceneCount) || 2, 1), 6);
+
+  let hookFormulaPromptInstruction = '';
+  if (viralHookFormula === 'contrarian_claim') {
+    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (CONTRARIAN CLAIM): Pierwsze zdanie w Scenie 1 MUSI rzucać wyzwanie powszechnej opinii lub ujawniać sekrety (np. "Banki / Media NIE chcą, żebyś o tym wiedział...", "Wszyscy robią to źle..."). Maksymalnie 12-14 słów.';
+  } else if (viralHookFormula === 'mistake_warning') {
+    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (MISTAKE WARNING): Pierwsze zdanie w Scenie 1 MUSI bezpośrednio ostrzegać przed kosztownym błędem finansowym (np. "Stop! Jeśli trzymasz tam pieniądze...", "Ten błąd kosztuje Cię tysiące rocznie..."). Maksymalnie 12-14 słów.';
+  } else if (viralHookFormula === 'list_tease') {
+    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (LIST / RANKING TEASE): Pierwsze zdanie w Scenie 1 MUSI otwierać zestawienie lub ranking budzący ciekawość (np. "3 błędy finansowe / ranking miejsc, w których tracisz oszczędności..."). Maksymalnie 14 słów.';
+  } else if (viralHookFormula === 'transformation') {
+    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (BEFORE & AFTER TRANSFORMATION): Pierwsze zdanie w Scenie 1 MUSI stawiać mocny, skrajny kontrast finansowy (np. "Co się stanie, gdy zainwestujesz 100 PLN miesięcznie w ETF zamiast trzymać w banku...").';
+  } else if (viralHookFormula === 'myth_buster') {
+    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (MYTH BUSTER): Pierwsze zdanie w Scenie 1 MUSI bezpośrednio obalać popularny mit rynkowy (np. "Obalamy powszechny mit o oszczędnościach w bankach...").';
+  }
 
   try {
     const contextInfo = articleContext ? `\n\nDodatkowy kontekst / treść artykułu źródłowego:\n"${articleContext}"\nWykorzystaj te fakty, aby scenariusz był rzetelny, aktualny i merytoryczny.` : '';
     
     const prompt = count === 2
-      ? `Jesteś elitarnym analitykiem biznesowym, publicystą ekonomiczno-technologicznym i twórcą formatów wideo (w stylu Bloomberg Originals, CNBC).
-Stwórz wysoce merytoryczny, dynamiczny scenariusz na 18-sekundowy film (DOKŁADNIE 2 uzupełniające się sceny po 9 sekund każda, duration = 9.0s na scenę, łącznie 18 sekund filmu) w języku: \${language} na temat: "\${cleanTopic}" (Kategoria: \${niche}).\${contextInfo}
-WYMÓG DYNAMIKI I JAKOŚCI (film składa się z 2 różnych ujęć wideo Pexels z montażem po 9s, aby uniknąć monotonii):
+      ? `Jesteś elitarnym twórcą viralowych formatów wideo dla portalu raport-finansowy24.pl (w stylu CNBC, Bloomberg, Hormozi).
+Stwórz wysoce merytoryczny, porywający scenariusz na 18-sekundowy film (DOKŁADNIE 2 uzupełniające się sceny po 9 sekund każda, duration = 9.0s na scenę, łącznie 18 sekund filmu) w języku: ${language} na temat: "${cleanTopic}" (Kategoria: ${niche}).${contextInfo}${hookFormulaPromptInstruction}
+WYMÓG DYNAMIKI I JAKOŚCI VIRALOWEJ (2 różne ujęcia wideo Pexels po 9s):
 - Całkowity ZAKAZ taniego clickbaitu, infantylnych powitań ('Cześć!', 'Czy wiesz że?'), banałów i wykrzykników.
 - STRUKTURA 2 SCEN:
-  1. SCENA 1 (duration = 9.0, ok. 20-24 słowa w języku \${language}): Frapujący hook i twarda teza analityczna stawiająca problem rynkowy lub zaskakujący fakt. Angielskie zapytanie "searchKeyword" do pierwszego ujęcia wideo Pexels (np. "stock market trading candlestick chart").
-  2. SCENA 2 (duration = 9.0, ok. 20-24 słowa w języku \${language}): Mechanizm przyczynowo-skutkowy, strategiczny wniosek oraz OBOWIĄZKOWE KOŃCOWE CTA dopasowane do tematu na samym końcu wypowiedzi (np. "Więcej raportów i wskaźników znajdziesz na raport-finansowy24.pl." lub "Sprawdź pełną analizę na raport-finansowy24.pl."). Drugie, inne angielskie zapytanie "searchKeyword" do drugiego, komplementarnego ujęcia wideo Pexels (np. "digital network corporate skyline night").
+  1. SCENA 1 (duration = 9.0, ok. 20-24 słowa w języku ${language}): Błyskawiczny hook przyciągający uwagę w 1. sekundzie i twarda teza analityczna. Angielskie zapytanie "searchKeyword" do pierwszego ujęcia wideo Pexels (np. "stock market trading candlestick chart").
+  2. SCENA 2 (duration = 9.0, ok. 20-24 słowa w języku ${language}): Mechanizm przyczynowo-skutkowy, strategiczny wniosek oraz OBOWIĄZKOWE KOŃCOWE CTA dopasowane do tematu na samym końcu wypowiedzi (np. "Więcej raportów i kalkulatorów znajdziesz na raport-finansowy24.pl." lub "Sprawdź pełną analizę na raport-finansowy24.pl."). Drugie, inne angielskie zapytanie "searchKeyword" do drugiego, komplementarnego ujęcia wideo Pexels (np. "digital network corporate skyline night").
 - Wymagane pola JSON:
-  1. "title": Poważny, chwytliwy tytuł analityczny w języku (\${language})
-  2. "description": Krótki opis z hashtagami (#shorts #analiza #wiedza | Sprawdź na https://raport-finansowy24.pl)
+  1. "title": Poważny, chwytliwy tytuł analityczny w języku (${language})
+  2. "description": Krótki opis z hashtagami (#shorts #analiza #finanse | Sprawdź na https://raport-finansowy24.pl)
   3. "hook": Pierwsze zdanie wypowiedzi ze sceny 1
   4. "scenes": Tablica z DOKŁADNIE 2 obiektami:
      - Scena 1: { "subtitles": string, "voiceover_text": string, "duration": 9.0, "searchKeyword": string }
@@ -2447,8 +2462,8 @@ Wymagania JSON:
 // Endpoint: AI Script & Shorts Generator (/api/generate-viral-script)
 router.post('/generate-viral-script', async (req, res) => {
   try {
-    const { topic = 'Rynki kapitałowe i dyscyplina inwestycyjna', niche = 'Finanse & Biznes', sceneCount = 1, language = 'Polski', articleContext } = req.body;
-    const script = await generateSmartOrGeminiViralScript({ topic, niche, sceneCount, language, articleContext });
+    const { topic = 'Rynki kapitałowe i dyscyplina inwestycyjna', niche = 'Finanse & Biznes', sceneCount = 1, language = 'Polski', articleContext, viralHookFormula } = req.body;
+    const script = await generateSmartOrGeminiViralScript({ topic, niche, sceneCount, language, articleContext, viralHookFormula });
     return res.json(script);
   } catch (error) {
     console.error('Error generating viral script:', error);
@@ -2524,7 +2539,8 @@ router.post('/auto-pilot-shorts', async (req, res) => {
         niche,
         language,
         sceneCount: body.sceneCount || 1,
-        articleContext: body.articleContext
+        articleContext: body.articleContext,
+        viralHookFormula: body.viralHookFormula
       });
 
       title = scriptData.title || topicToUse;
