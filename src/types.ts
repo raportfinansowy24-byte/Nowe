@@ -13,6 +13,7 @@ export interface CaptionStyle {
 export interface Scene {
   id: string;
   videoUrl: string;
+  thumbnailUrl?: string;
   imageUrl?: string;
   duration?: number;
   subtitles: string;
@@ -21,6 +22,7 @@ export interface Scene {
   captionStyle: CaptionStyle;
   trimStart?: number;
   trimEnd?: number;
+  searchKeyword?: string;
 }
 
 export interface CombinePayload {
@@ -94,12 +96,30 @@ export interface ViralScriptRequest {
 
 export interface ViralScene {
   subtitles: string;
+  voiceover_text?: string;
+  voiceoverText?: string;
   duration: number;
   searchKeyword: string;
   videoUrl: string;
+  thumbnailUrl?: string;
+  source?: 'pexels' | 'curated';
+  photographer?: string;
+  pexelsId?: number;
   captionStyle: CaptionStyle;
   trimStart?: number;
   trimEnd?: number;
+}
+
+export interface PexelsVideoItem {
+  id: number;
+  videoUrl: string;
+  thumbnailUrl: string;
+  width?: number;
+  height?: number;
+  duration?: number;
+  photographer?: string;
+  photographerUrl?: string;
+  source?: 'pexels' | 'curated';
 }
 
 export interface ViralScriptResponse {

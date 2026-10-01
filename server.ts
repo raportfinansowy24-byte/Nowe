@@ -30,54 +30,75 @@ const CURATED_MOTION_CLIPS_POOL = [
   {
     title: 'Giełda & Wykresy Świecowe (Finanse / Trading)',
     keywords: ['giełda', 'akcje', 'finanse', 'pieniądz', 'inwestycje', 'trading', 'finance', 'stock', 'market', 'chart', 'candlestick', 'crypto', 'bitcoin', 'bankier', 'economy'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-stock-market-candlestick-charts-and-graphs-41315-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-stock-market-candlestick-charts-and-graphs-41315-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=640&q=80'
   },
   {
     title: 'Metropolia Nocą & Drapacze Chmur (Biznes / Gospodarka)',
     keywords: ['miasto', 'metropolia', 'biznes', 'drapacze', 'wieżowce', 'sukces', 'city', 'drone', 'skyscrapers', 'building', 'metropolis', 'urban', 'night', 'corporate'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-skyscrapers-at-night-42416-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-city-skyscrapers-at-night-42416-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=640&q=80'
   },
   {
     title: 'Cyfrowy Matrix & Animacja Danych (AI / Technologia)',
     keywords: ['ai', 'sztuczna inteligencja', 'technologia', 'dane', 'kod', 'sieci', 'komputer', 'tech', 'cyber', 'code', 'data', 'algorithm', 'digital', 'neural', 'matrix'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-graphs-and-data-31913-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-screens-with-graphs-and-data-31913-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=640&q=80'
   },
   {
     title: 'Przeliczanie Gotówki & Pieniądze (Kapitał / Waluty)',
     keywords: ['pieniądze', 'gotówka', 'waluty', 'dolar', 'euro', 'złoty', 'banknoty', 'money', 'cash', 'currency', 'bills', 'wealth', 'millionaire'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-hands-counting-a-stack-of-euro-bills-48243-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-hands-counting-a-stack-of-euro-bills-48243-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=640&q=80'
   },
   {
     title: 'Cyberpunk & Neonowy Tunel (Nowoczesność / Przyszłość)',
     keywords: ['przyszłość', 'neon', 'cyberpunk', 'tunel', 'dynamika', 'future', 'tunnel', 'neon', 'glow', 'abstract', 'motion', 'loop'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-tunnel-with-neon-lights-42845-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-futuristic-tunnel-with-neon-lights-42845-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=640&q=80'
   },
   {
     title: 'Koło Luksusowego Samochodu & Prędkość (Adrenalina / Motoryzacja)',
     keywords: ['samochód', 'auto', 'prędkość', 'luksus', 'adrenalina', 'car', 'speed', 'luxury', 'wheel', 'drive', 'hypercar', 'fast'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-close-up-of-the-wheel-of-a-luxury-car-spinning-42512-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-close-up-of-the-wheel-of-a-luxury-car-spinning-42512-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=640&q=80'
   },
   {
     title: 'Fale Oceanu & Klif (Natura / Spokój / Psychologia)',
     keywords: ['natura', 'ocean', 'morze', 'klif', 'psychologia', 'mózg', 'spokój', 'nature', 'ocean', 'water', 'cliff', 'waves', 'calm', 'landscape'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-ocean-waves-crashing-on-rocks-42414-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-ocean-waves-crashing-on-rocks-42414-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=640&q=80'
   },
   {
     title: 'Głęboki Kosmos & Gwiazdy (Wszechświat / Filozofia)',
     keywords: ['kosmos', 'gwiazdy', 'galaktyka', 'wszechświat', 'filozofia', 'space', 'galaxy', 'stars', 'cosmos', 'universe', 'deep space'],
-    url: 'https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4'
+    url: 'https://assets.mixkit.co/videos/preview/mixkit-stars-in-space-1610-large.mp4',
+    thumbnailUrl: 'https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?auto=format&fit=crop&w=640&q=80'
   }
 ];
 
-// Dynamically search vertical portrait (9:16) stock video from Pexels API
-async function searchPexelsVideo(query: string): Promise<string | null> {
+export interface ResolvedStockVideo {
+  videoUrl: string;
+  thumbnailUrl: string;
+  searchKeyword?: string;
+  source: 'pexels' | 'curated';
+  pexelsId?: number;
+  width?: number;
+  height?: number;
+  duration?: number;
+  photographer?: string;
+  photographerUrl?: string;
+}
+
+// Dynamically search vertical portrait (9:16) stock video from Pexels API with full metadata & thumbnail
+async function searchPexelsVideoDetailed(query: string): Promise<ResolvedStockVideo | null> {
   const pexelsKey = process.env.PEXELS_API_KEY;
   if (!pexelsKey || !pexelsKey.trim()) return null;
 
   try {
     const cleanQuery = (query || 'stock market chart').trim();
     const searchUrl = `https://api.pexels.com/videos/search?query=${encodeURIComponent(cleanQuery)}&orientation=portrait&per_page=12`;
-    console.log(`[Pexels API] Szukanie wideo 9:16 dla hasła: "${cleanQuery}"...`);
+    console.log(`[Pexels API] Szukanie ujęcia 9:16 dla hasła: "${cleanQuery}"...`);
 
     const res = await fetch(searchUrl, {
       headers: {
@@ -105,8 +126,19 @@ async function searchPexelsVideo(query: string): Promise<string | null> {
           );
 
           if (verticalMp4 && verticalMp4.link) {
-            console.log(`✓ [Pexels API Znaleziono] "${cleanQuery}" -> ${verticalMp4.link.slice(0, 70)}... (${verticalMp4.width}x${verticalMp4.height})`);
-            return verticalMp4.link;
+            console.log(`✓ [Pexels API Znaleziono] "${cleanQuery}" -> ${verticalMp4.link.slice(0, 60)}... (${verticalMp4.width}x${verticalMp4.height})`);
+            return {
+              videoUrl: verticalMp4.link,
+              thumbnailUrl: video.image || video.video_pictures?.[0]?.picture || '',
+              pexelsId: video.id,
+              width: verticalMp4.width,
+              height: verticalMp4.height,
+              duration: video.duration,
+              photographer: video.user?.name,
+              photographerUrl: video.user?.url,
+              searchKeyword: cleanQuery,
+              source: 'pexels'
+            };
           }
         }
       }
@@ -117,24 +149,106 @@ async function searchPexelsVideo(query: string): Promise<string | null> {
   return null;
 }
 
-// Synchronous stock video resolver matching keywords
-function getStockVideoUrl(query: string, index: number): string {
-  if (!query) return CURATED_MOTION_CLIPS_POOL[index % CURATED_MOTION_CLIPS_POOL.length].url;
+// Search multiple alternative clips for a given query (for gallery / swapping)
+async function searchPexelsMultiple(query: string, perPage: number = 8): Promise<ResolvedStockVideo[]> {
+  const pexelsKey = process.env.PEXELS_API_KEY;
+  if (!pexelsKey || !pexelsKey.trim()) return [];
+
+  try {
+    const cleanQuery = (query || 'finance stock market').trim();
+    const searchUrl = `https://api.pexels.com/videos/search?query=${encodeURIComponent(cleanQuery)}&orientation=portrait&per_page=${perPage}`;
+    const res = await fetch(searchUrl, {
+      headers: {
+        Authorization: pexelsKey.trim(),
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+      }
+    });
+
+    if (!res.ok) return [];
+    const data: any = await res.json();
+    if (!data.videos || !Array.isArray(data.videos)) return [];
+
+    const results: ResolvedStockVideo[] = [];
+    for (const video of data.videos) {
+      if (Array.isArray(video.video_files)) {
+        const verticalMp4 = video.video_files.find((f: any) =>
+          f.file_type === 'video/mp4' && f.height > f.width && f.height >= 1280
+        ) || video.video_files.find((f: any) =>
+          f.file_type === 'video/mp4' && f.height > f.width
+        ) || video.video_files.find((f: any) =>
+          f.file_type === 'video/mp4' && f.link && f.link.endsWith('.mp4')
+        );
+
+        if (verticalMp4 && verticalMp4.link) {
+          results.push({
+            videoUrl: verticalMp4.link,
+            thumbnailUrl: video.image || video.video_pictures?.[0]?.picture || '',
+            pexelsId: video.id,
+            width: verticalMp4.width,
+            height: verticalMp4.height,
+            duration: video.duration,
+            photographer: video.user?.name,
+            photographerUrl: video.user?.url,
+            searchKeyword: cleanQuery,
+            source: 'pexels'
+          });
+        }
+      }
+    }
+    return results;
+  } catch (err) {
+    console.warn('[searchPexelsMultiple Błąd]', (err as Error).message);
+    return [];
+  }
+}
+
+// Dynamically search vertical portrait (9:16) stock video from Pexels API (backward-compatible)
+async function searchPexelsVideo(query: string): Promise<string | null> {
+  const detailed = await searchPexelsVideoDetailed(query);
+  return detailed ? detailed.videoUrl : null;
+}
+
+// Synchronous stock video resolver matching keywords with thumbnail
+function getStockVideoWithThumbnail(query: string, index: number): { url: string; thumbnailUrl: string; title: string } {
+  if (!query) {
+    const item = CURATED_MOTION_CLIPS_POOL[index % CURATED_MOTION_CLIPS_POOL.length];
+    return { url: item.url, thumbnailUrl: item.thumbnailUrl, title: item.title };
+  }
   const lower = query.toLowerCase();
   const matched = CURATED_MOTION_CLIPS_POOL.find((item) =>
     item.keywords.some((k) => lower.includes(k))
   );
-  return matched ? matched.url : CURATED_MOTION_CLIPS_POOL[index % CURATED_MOTION_CLIPS_POOL.length].url;
+  if (matched) {
+    return { url: matched.url, thumbnailUrl: matched.thumbnailUrl, title: matched.title };
+  }
+  const fallback = CURATED_MOTION_CLIPS_POOL[index % CURATED_MOTION_CLIPS_POOL.length];
+  return { url: fallback.url, thumbnailUrl: fallback.thumbnailUrl, title: fallback.title };
+}
+
+// Synchronous stock video resolver matching keywords
+function getStockVideoUrl(query: string, index: number): string {
+  return getStockVideoWithThumbnail(query, index).url;
+}
+
+// Asynchronous stock or Pexels video resolver with full metadata & thumbnail
+async function resolveStockOrPexelsVideoDetailed(query: string, index: number): Promise<ResolvedStockVideo> {
+  if (process.env.PEXELS_API_KEY && process.env.PEXELS_API_KEY.trim()) {
+    const pexelsResult = await searchPexelsVideoDetailed(query);
+    if (pexelsResult) return pexelsResult;
+  }
+  const fallback = getStockVideoWithThumbnail(query, index);
+  return {
+    videoUrl: fallback.url,
+    thumbnailUrl: fallback.thumbnailUrl,
+    searchKeyword: query,
+    source: 'curated'
+  };
 }
 
 // Asynchronous stock or Pexels video resolver
 async function resolveStockOrPexelsVideo(query: string, index: number): Promise<string> {
-  // If Pexels API key configured, attempt dynamic search
-  if (process.env.PEXELS_API_KEY && process.env.PEXELS_API_KEY.trim()) {
-    const pexelsUrl = await searchPexelsVideo(query);
-    if (pexelsUrl) return pexelsUrl;
-  }
-  return getStockVideoUrl(query, index);
+  const detailed = await resolveStockOrPexelsVideoDetailed(query, index);
+  return detailed.videoUrl;
 }
 
 // Enable JSON body parsing with higher limit for payloads
@@ -1924,6 +2038,8 @@ function buildSmartFallbackScript(
         duration: 9.0,
         searchKeyword: kw1,
         videoUrl: CURATED_MOTION_CLIPS_POOL[videoIndex].url,
+        thumbnailUrl: CURATED_MOTION_CLIPS_POOL[videoIndex].thumbnailUrl,
+        source: 'curated' as const,
         captionStyle: {
           position: 'bottom' as const,
           animation: 'word-by-word' as const,
@@ -1940,6 +2056,8 @@ function buildSmartFallbackScript(
         duration: 9.0,
         searchKeyword: kw2,
         videoUrl: CURATED_MOTION_CLIPS_POOL[(videoIndex + 1) % CURATED_MOTION_CLIPS_POOL.length].url,
+        thumbnailUrl: CURATED_MOTION_CLIPS_POOL[(videoIndex + 1) % CURATED_MOTION_CLIPS_POOL.length].thumbnailUrl,
+        source: 'curated' as const,
         captionStyle: {
           position: 'bottom' as const,
           animation: 'word-by-word' as const,
@@ -2238,7 +2356,7 @@ ${autonomousPromptInstructions}`;
       if (parsed && Array.isArray(parsed.scenes) && parsed.scenes.length > 0) {
         const scenesWithVideo = await Promise.all(
           parsed.scenes.map(async (sc: any, idx: number) => {
-            const resolvedVideo = await resolveStockOrPexelsVideo(sc.searchKeyword, idx);
+            const resolved = await resolveStockOrPexelsVideoDetailed(sc.searchKeyword, idx);
             let textContent = sc.voiceover_text || sc.subtitles || '';
             const isLast = idx === parsed.scenes.length - 1;
             if (isLast) {
@@ -2249,7 +2367,13 @@ ${autonomousPromptInstructions}`;
               subtitles: textContent,
               voiceover_text: textContent,
               duration: sc.duration || (count === 1 ? 18.0 : 4.5),
-              videoUrl: resolvedVideo,
+              videoUrl: resolved.videoUrl,
+              thumbnailUrl: resolved.thumbnailUrl,
+              source: resolved.source,
+              photographer: resolved.photographer,
+              photographerUrl: resolved.photographerUrl,
+              pexelsId: resolved.pexelsId,
+              searchKeyword: sc.searchKeyword || resolved.searchKeyword || 'finance chart',
               captionStyle: sc.captionStyle || {
                 position: 'bottom',
                 animation: 'word-by-word',
@@ -2367,7 +2491,7 @@ Wymagania JSON:
       if (parsed && Array.isArray(parsed.scenes) && parsed.scenes.length > 0) {
         const scenesWithVideo = await Promise.all(
           parsed.scenes.map(async (sc: any, idx: number) => {
-            const resolvedVideo = await resolveStockOrPexelsVideo(sc.searchKeyword, idx);
+            const resolved = await resolveStockOrPexelsVideoDetailed(sc.searchKeyword, idx);
             let textContent = sc.voiceover_text || sc.subtitles || '';
             const isLast = idx === parsed.scenes.length - 1;
             if (isLast && targetLanguage.toLowerCase().includes('pol')) {
@@ -2377,8 +2501,13 @@ Wymagania JSON:
               subtitles: textContent,
               voiceover_text: textContent,
               duration: sc.duration || (count === 1 ? 18.0 : 4.5),
-              searchKeyword: sc.searchKeyword || 'video background',
-              videoUrl: resolvedVideo,
+              searchKeyword: sc.searchKeyword || resolved.searchKeyword || 'video background',
+              videoUrl: resolved.videoUrl,
+              thumbnailUrl: resolved.thumbnailUrl,
+              source: resolved.source,
+              photographer: resolved.photographer,
+              photographerUrl: resolved.photographerUrl,
+              pexelsId: resolved.pexelsId,
               captionStyle: {
                 position: 'bottom' as const,
                 animation: 'word-by-word' as const,
@@ -3188,6 +3317,101 @@ router.get('/stock/status', (req, res) => {
     defaultDuration: 18.0,
     recommendedScenes: 2
   });
+});
+
+// Endpoint: Search Pexels Vertical Stock Videos (/api/stock/search-pexels)
+router.get('/stock/search-pexels', async (req, res) => {
+  try {
+    const query = (req.query.query as string) || 'stock market chart';
+    const perPage = Math.min(24, Math.max(1, Number(req.query.per_page) || 8));
+    const videos = await searchPexelsMultiple(query, perPage);
+
+    // If Pexels returned nothing or key is absent, provide relevant curated fallback with thumbnails
+    if (videos.length === 0) {
+      const lower = query.toLowerCase();
+      const matched = CURATED_MOTION_CLIPS_POOL.filter((item) =>
+        item.keywords.some((k) => lower.includes(k))
+      );
+      const fallbackList = (matched.length > 0 ? matched : CURATED_MOTION_CLIPS_POOL).map((item, idx) => ({
+        videoUrl: item.url,
+        thumbnailUrl: item.thumbnailUrl,
+        pexelsId: 900000 + idx,
+        width: 720,
+        height: 1280,
+        duration: 18,
+        photographer: 'Mixkit / Studio',
+        searchKeyword: query,
+        source: 'curated' as const
+      }));
+      return res.json({
+        success: true,
+        query,
+        count: fallbackList.length,
+        source: 'curated',
+        videos: fallbackList
+      });
+    }
+
+    return res.json({
+      success: true,
+      query,
+      count: videos.length,
+      source: 'pexels',
+      videos
+    });
+  } catch (error) {
+    console.error('Error searching Pexels footage:', error);
+    return res.status(500).json({
+      error: 'Błąd wyszukiwania materiałów Pexels',
+      details: (error as Error).message
+    });
+  }
+});
+
+// Endpoint: Get All Curated Vertical Motion Clips (/api/stock/curated)
+router.get('/stock/curated', (req, res) => {
+  res.json({
+    success: true,
+    count: CURATED_MOTION_CLIPS_POOL.length,
+    clips: CURATED_MOTION_CLIPS_POOL
+  });
+});
+
+// Endpoint: Fetch Fresh Stock Footage for Multiple Scenes (/api/stock/fetch-scene-footage)
+router.post('/stock/fetch-scene-footage', async (req, res) => {
+  try {
+    const { keywords = [], topic = '' } = req.body;
+    const queries: string[] = Array.isArray(keywords) && keywords.length > 0
+      ? keywords
+      : [topic || 'finance stock market', 'business corporate data'];
+
+    const resolved = await Promise.all(
+      queries.map(async (query: string, idx: number) => {
+        const item = await resolveStockOrPexelsVideoDetailed(query, idx);
+        return {
+          sceneIndex: idx,
+          searchKeyword: query,
+          videoUrl: item.videoUrl,
+          thumbnailUrl: item.thumbnailUrl,
+          source: item.source,
+          photographer: item.photographer,
+          photographerUrl: item.photographerUrl,
+          duration: item.duration || 9.0
+        };
+      })
+    );
+
+    return res.json({
+      success: true,
+      footage: resolved
+    });
+  } catch (error) {
+    console.error('Error fetching scene footage:', error);
+    return res.status(500).json({
+      error: 'Błąd pobierania materiałów wideo dla scen',
+      details: (error as Error).message
+    });
+  }
 });
 
 // Get All Recent and Active Jobs (/api/jobs)

@@ -31,9 +31,10 @@ import {
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
-import { Scene, JobStatusResponse, CaptionStyle, BankierArticle } from '../types';
+import { Scene, JobStatusResponse, CaptionStyle, BankierArticle, ViralScene } from '../types';
 import { BankierNewsFeed } from './BankierNewsFeed';
 import { VideoPreview } from './VideoPreview';
+import { StockFootageGrid } from './StockFootageGrid';
 
 interface AiViralAutoPilotProps {
   onLoadScriptToEditor: (scenes: Scene[], musicUrl?: string) => void;
@@ -199,6 +200,10 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
     backgroundMusicUrl: string;
   } | null>(null);
 
+  // Stock Footage Verification & Preview state
+  const [verifyFootageBeforeRender, setVerifyFootageBeforeRender] = useState<boolean>(true);
+  const [isRefreshingFootage, setIsRefreshingFootage] = useState<boolean>(false);
+
   const [activeJobId, setActiveJobId] = useState<string | null>(null);
   const [jobStatus, setJobStatus] = useState<JobStatusResponse | null>(null);
 
@@ -360,11 +365,242 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
     }, 1200);
   };
 
-  // Auto-Pilot Full Execution
+  // Update video for a single scene in the visual grid
+  const handleUpdateSceneVideo = (
+    sceneIndex: number,
+    newVideo: { videoUrl: string; thumbnailUrl: string; searchKeyword?: string; photographer?: string; source?: 'pexels' | 'curated' }
+  ) => {
+    if (!generatedScript) return;
+    const updatedScenes = [...generatedScript.scenes];
+    if (updatedScenes[sceneIndex]) {
+      updatedScenes[sceneIndex] = {
+        ...updatedScenes[sceneIndex],
+        videoUrl: newVideo.videoUrl,
+        thumbnailUrl: newVideo.thumbnailUrl,
+        searchKeyword: newVideo.searchKeyword || updatedScenes[sceneIndex].searchKeyword,
+        photographer: newVideo.photographer,
+        source: newVideo.source || 'pexels'
+      };
+      setGeneratedScript({
+        ...generatedScript,
+        scenes: updatedScenes
+      });
+
+      const appScenes: Scene[] = updatedScenes.map((s: any, i: number) => ({
+        id: `gen-scene-${Date.now()}-${i}`,
+        videoUrl: s.videoUrl,
+        thumbnailUrl: s.thumbnailUrl,
+        subtitles: s.subtitles,
+        voiceover_text: s.voiceover_text || s.subtitles,
+        trimStart: 0,
+        trimEnd: s.duration || 4,
+        captionStyle: s.captionStyle || {
+          fontSize: 54,
+          fontColor: 'white',
+          outlineColor: 'black',
+          outlineWidth: 6,
+          boxColor: 'black@0.6',
+          position: captionPosition,
+          animation: captionAnimation,
+          highlightColor: highlightColor
+        }
+      }));
+      onLoadScriptToEditor(appScenes, generatedScript.backgroundMusicUrl);
+    }
+  };
+
+  // Re-fetch fresh Pexels footage for all scenes
+  const handleRefreshAllFootage = async () => {
+    if (!generatedScript || !generatedScript.scenes || generatedScript.scenes.length === 0) return;
+    setIsRefreshingFootage(true);
+    try {
+      const keywords = generatedScript.scenes.map((s: any) => s.searchKeyword || topic);
+      const res = await fetch('/api/stock/fetch-scene-footage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ keywords, topic })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Nie udało się odświeżyć ujęć z Pexels');
+
+      if (data.footage && Array.isArray(data.footage)) {
+        const updatedScenes = generatedScript.scenes.map((sc: any, idx: number) => {
+          const fresh = data.footage[idx];
+          if (fresh) {
+            return {
+              ...sc,
+              videoUrl: fresh.videoUrl,
+              thumbnailUrl: fresh.thumbnailUrl,
+              source: fresh.source,
+              photographer: fresh.photographer
+            };
+          }
+          return sc;
+        });
+
+        setGeneratedScript({
+          ...generatedScript,
+          scenes: updatedScenes
+        });
+        onToast?.('success', 'Odświeżono ujęcia Pexels', `Pobrano nowe miniatury i ujęcia dla ${updatedScenes.length} scen.`);
+      }
+    } catch (err) {
+      onToast?.('error', 'Błąd odświeżania ujęć', (err as Error).message);
+    } finally {
+      setIsRefreshingFootage(false);
+    }
+  };
+
+  // Start rendering with verified scenes (called from StockFootageGrid or Auto-Pilot)
+  const handleStartRenderWithVerifiedScenes = async (scenesToRender: ViralScene[]) => {
+    setAutoPilotLoading(true);
+    setError(null);
+    setJobStatus(null);
+
+    try {
+      const payloadScenes = scenesToRender.map((s) => ({
+        text: s.voiceover_text || s.subtitles,
+        subtitles: s.subtitles,
+        video_url: s.videoUrl,
+        duration: s.duration || 9.0,
+        searchKeyword: s.searchKeyword,
+        captionStyle: s.captionStyle || {
+          position: captionPosition,
+          animation: captionAnimation,
+          highlightColor: highlightColor,
+          fontColor: 'white',
+          outlineColor: 'black',
+          outlineWidth: 6,
+          boxColor: 'black@0.6'
+        }
+      }));
+
+      const res = await fetch('/api/auto-pilot-shorts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topic: generatedScript?.title || topic,
+          niche,
+          scenes: payloadScenes,
+          outputResolution: resolution,
+          async: true,
+          tts: ttsEnabled,
+          ttsLanguage: targetLanguage,
+          ttsVoice,
+          ttsSpeed,
+          syncDurationWithVoice,
+          captionAnimation,
+          highlightColor,
+          backgroundMusicUrl: generatedScript?.backgroundMusicUrl
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Nie udało się uruchomić renderowania');
+      }
+
+      onToast?.('success', 'Renderowanie uruchomione!', `Zatwierdzone materiały Pexels wysłano do silnika FFmpeg (ID: ${data.jobId})`);
+      trackJob(data.jobId);
+    } catch (err) {
+      const msg = (err as Error).message || 'Wystąpił błąd podczas uruchamiania renderowania';
+      setError(msg);
+      onToast?.('error', 'Błąd renderowania', msg);
+    } finally {
+      setAutoPilotLoading(false);
+    }
+  };
+
+  // Fetch script and Pexels footage thumbnails for user verification before render
+  const handleFetchAndVerifyFootage = async () => {
+    if (activeMode === 'create' && !topic.trim()) return;
+    if (activeMode === 'translate' && !translationScriptText.trim()) return;
+
+    setGeneratingScript(true);
+    setError(null);
+
+    try {
+      let data: any;
+      if (activeMode === 'translate') {
+        const res = await fetch('/api/translate-video-script', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            scriptText: translationScriptText,
+            targetLanguage,
+            sceneCount
+          })
+        });
+        data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Nie udało się przetłumaczyć wideo');
+      } else {
+        const res = await fetch('/api/generate-viral-script', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            topic,
+            niche,
+            articleContext: buildArticleContextString(selectedBankierArticle),
+            bankierArticle: selectedBankierArticle,
+            language: targetLanguage,
+            sceneCount
+          })
+        });
+        data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Nie udało się pobrać materiałów i scenariusza');
+      }
+
+      setGeneratedScript(data);
+
+      const appScenes: Scene[] = (data.scenes || []).map((s: any, i: number) => ({
+        id: `gen-scene-${Date.now()}-${i}`,
+        videoUrl: s.videoUrl,
+        thumbnailUrl: s.thumbnailUrl,
+        subtitles: s.subtitles,
+        voiceover_text: s.voiceover_text || s.subtitles,
+        trimStart: 0,
+        trimEnd: s.duration || 4,
+        captionStyle: {
+          fontSize: 54,
+          fontColor: 'white',
+          outlineColor: 'black',
+          outlineWidth: 6,
+          boxColor: 'black@0.6',
+          position: captionPosition,
+          animation: captionAnimation,
+          highlightColor: highlightColor
+        }
+      }));
+
+      onLoadScriptToEditor(appScenes, data.backgroundMusicUrl);
+      onToast?.('success', 'Pobrano materiały z Pexels!', 'Zweryfikuj miniatury w siatce poniżej i kliknij „Zatwierdź & Renderuj”.');
+    } catch (err) {
+      const msg = (err as Error).message || 'Wystąpił błąd podczas pobierania materiałów z Pexels';
+      setError(msg);
+      onToast?.('error', 'Błąd pobierania materiałów', msg);
+    } finally {
+      setGeneratingScript(false);
+    }
+  };
+
+  // Auto-Pilot Execution Flow
   const handleAutoPilotRun = async () => {
     if (activeMode === 'create' && !topic.trim()) return;
     if (activeMode === 'translate' && !translationScriptText.trim()) return;
 
+    // If verification before render is enabled and user hasn't generated/verified footage yet:
+    if (verifyFootageBeforeRender && (!generatedScript || !generatedScript.scenes || generatedScript.scenes.length === 0)) {
+      await handleFetchAndVerifyFootage();
+      return;
+    }
+
+    // If footage is already generated and verified, start rendering immediately!
+    if (generatedScript && generatedScript.scenes && generatedScript.scenes.length > 0) {
+      await handleStartRenderWithVerifiedScenes(generatedScript.scenes);
+      return;
+    }
+
+    // Direct one-shot render (when verification is disabled)
     setAutoPilotLoading(true);
     setError(null);
     setJobStatus(null);
@@ -1298,6 +1534,24 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
             </div>
           )}
 
+          {/* Footage Verification Option */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+            <label className="flex items-center gap-2.5 cursor-pointer text-xs text-slate-300">
+              <input
+                type="checkbox"
+                checked={verifyFootageBeforeRender}
+                onChange={(e) => setVerifyFootageBeforeRender(e.target.checked)}
+                className="rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0 w-4 h-4"
+              />
+              <span className="font-semibold text-white">
+                Wyświetl siatkę miniatur Pexels do weryfikacji przed renderem
+              </span>
+            </label>
+            <span className="text-[11px] text-emerald-400 font-medium">
+              ✓ Podgląd kadrów i podmiana klipów Pexels
+            </span>
+          </div>
+
           {/* Main Execution Trigger Buttons */}
           <div className="flex flex-col sm:flex-row items-center gap-3 pt-2 border-t border-slate-800">
             <button
@@ -1308,27 +1562,41 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
               {autoPilotLoading ? (
                 <>
                   <RefreshCw className="w-4 h-4 animate-spin text-white" />
-                  Uruchamianie Auto-Pilota Gemini AI...
+                  Uruchamianie Renderera FFmpeg...
+                </>
+              ) : generatingScript ? (
+                <>
+                  <RefreshCw className="w-4 h-4 animate-spin text-white" />
+                  Pobieranie materiałów z Pexels...
                 </>
               ) : (
                 <>
                   <Zap className="w-4 h-4 text-yellow-300 fill-yellow-300 animate-pulse" />
-                  ⚡ Generuj Viral Shorta (Auto-Pilot)
+                  {generatedScript && generatedScript.scenes?.length > 0
+                    ? '🚀 Zatwierdź & Renderuj Film (FFmpeg)'
+                    : '⚡ Generuj i Zweryfikuj Ujęcia Pexels'}
                 </>
               )}
             </button>
 
             <button
+              type="button"
+              onClick={handleFetchAndVerifyFootage}
+              disabled={autoPilotLoading || generatingScript}
+              className="w-full sm:w-auto py-3.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              title="Pobierz ujęcia z Pexels do weryfikacji"
+            >
+              <Film className="w-4 h-4 text-cyan-400" />
+              <span>Podgląd Ujęć Pexels</span>
+            </button>
+
+            <button
               onClick={handleGenerateScriptOnly}
               disabled={autoPilotLoading || generatingScript}
-              className="w-full sm:w-auto py-3.5 px-5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full sm:w-auto py-3.5 px-4 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              {generatingScript ? (
-                <RefreshCw className="w-4 h-4 animate-spin" />
-              ) : (
-                <Sparkles className="w-4 h-4 text-indigo-400" />
-              )}
-              Generuj Scenariusz do Edytora
+              <Sparkles className="w-4 h-4 text-indigo-400" />
+              <span>Do Edytora</span>
             </button>
           </div>
         </div>
@@ -1374,6 +1642,19 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
           </div>
         </div>
       </div>
+
+      {/* 🌟 PEXELS STOCK FOOTAGE VISUAL VERIFICATION GRID */}
+      {generatedScript && generatedScript.scenes && generatedScript.scenes.length > 0 && (
+        <StockFootageGrid
+          scenes={generatedScript.scenes}
+          onUpdateSceneVideo={handleUpdateSceneVideo}
+          onStartRender={handleStartRenderWithVerifiedScenes}
+          onRefreshAllFootage={handleRefreshAllFootage}
+          isRendering={autoPilotLoading}
+          isLoadingFootage={isRefreshingFootage || generatingScript}
+          onToast={onToast}
+        />
+      )}
 
       {/* Generated Result & Real-Time Render Player */}
       {(generatedScript || jobStatus) && (
