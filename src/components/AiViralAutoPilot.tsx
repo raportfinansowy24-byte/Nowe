@@ -147,11 +147,6 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
   const [sceneCount, setSceneCount] = useState(2);
   const [resolution, setResolution] = useState('720x1280');
 
-  // Viral Strategy 2026 Hook Formula State (Default: 'auto' for 100% automation)
-  const [viralHookFormula, setViralHookFormula] = useState<
-    'auto' | 'contrarian_claim' | 'mistake_warning' | 'list_tease' | 'transformation' | 'myth_buster'
-  >('auto');
-  const [showManualHookOverride, setShowManualHookOverride] = useState<boolean>(false);
   const [showSwipeFileModal, setShowSwipeFileModal] = useState<boolean>(false);
 
   // Bankier.pl Live News State
@@ -434,8 +429,8 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
           body: JSON.stringify({
             topic,
             niche,
-            viralHookFormula,
             articleContext: buildArticleContextString(selectedBankierArticle),
+            bankierArticle: selectedBankierArticle,
             language: targetLanguage,
             outputResolution: resolution,
             async: true,
@@ -496,8 +491,8 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
           body: JSON.stringify({
             topic,
             niche,
-            viralHookFormula,
             articleContext: buildArticleContextString(selectedBankierArticle),
+            bankierArticle: selectedBankierArticle,
             language: targetLanguage,
             sceneCount
           })
@@ -693,160 +688,45 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
                     </span>
                   </div>
 
-                  {/* 🚀 VIRAL STRATEGY 2026: Hook Selection Section */}
-                  <div className="space-y-3 pt-3.5 mt-3 border-t border-slate-800/80">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <Flame className="w-4 h-4 text-amber-400" />
-                        <span className="text-xs font-bold text-amber-300 uppercase tracking-wide">
-                          Dobór Hooka (Zasada 1-sekundowej decyzji widza):
-                        </span>
-                        <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-extrabold uppercase tracking-wider">
-                          100% Automatyzacja
-                        </span>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setShowSwipeFileModal(true)}
-                          className="text-[11px] font-bold text-indigo-300 hover:text-indigo-200 bg-indigo-950/80 border border-indigo-500/40 hover:border-indigo-400 px-2.5 py-1 rounded-lg transition flex items-center gap-1.5 shadow-sm active:scale-95"
-                        >
-                          <Sparkles className="w-3.5 h-3.5 text-indigo-400" />
-                          <span>Baza 20+ Hooków</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Auto-Pilot Default Active Card */}
-                    <div className={`p-3.5 rounded-xl border transition-all ${
-                      viralHookFormula === 'auto'
-                        ? 'bg-gradient-to-r from-emerald-950/40 via-slate-900 to-indigo-950/30 border-emerald-500/50 shadow-lg shadow-emerald-950/30 ring-1 ring-emerald-500/40'
-                        : 'bg-slate-950/60 border-slate-800 hover:border-slate-700'
-                    }`}>
+                  {/* 🚀 VIRAL STRATEGY 2026: 100% Automated Bankier.pl News Hook Engine */}
+                  <div className="pt-3.5 mt-3 border-t border-slate-800/80">
+                    <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-950/30 via-slate-900 to-indigo-950/40 border border-emerald-500/30 shadow-lg space-y-3">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">🤖</span>
-                            <span className="text-xs font-bold text-white">
-                              Pełny Auto-Pilot AI (Rekomendowany)
+                        <div className="space-y-1 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                            <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                              Autonomiczny Dobór Hooka (Gemini AI + Bankier.pl)
                             </span>
-                            {viralHookFormula === 'auto' && (
-                              <span className="px-2 py-0.5 rounded bg-emerald-500 text-slate-950 text-[10px] font-extrabold uppercase">
-                                AKTYWNY
-                              </span>
-                            )}
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-[10px] font-extrabold uppercase">
+                              100% Automatyzacja
+                            </span>
                           </div>
                           <p className="text-[11px] text-slate-300 leading-relaxed">
-                            Zero Twojego wysiłku. Sztuczna inteligencja samodzielnie bada temat i dobiera idealną formułę (Contrarian, Warning, Ranking itp.) pod kątem maksymalnej retencji w 1. sekundzie.
+                            Brak konieczności manualnego wyboru. Model Gemini w ułamku sekundy analizuje fakty, liczby i sentyment artykułu z Bankier.pl, samodzielnie dopasowując najbardziej hipnotyzujący hook w 1. sekundzie (Ostrzeżenie / Contrarian / Ranking / Obalanie Mitu) oraz montaż 2 komplementarnych ujęć.
                           </p>
                         </div>
 
-                        <div className="flex items-center gap-2 shrink-0">
-                          {viralHookFormula !== 'auto' ? (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setViralHookFormula('auto');
-                                setShowManualHookOverride(false);
-                              }}
-                              className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs transition shadow-sm"
-                            >
-                              Przywróć Auto-Pilot
-                            </button>
-                          ) : (
-                            <button
-                              type="button"
-                              onClick={() => setShowManualHookOverride(!showManualHookOverride)}
-                              className="text-[11px] text-slate-400 hover:text-slate-200 underline decoration-slate-600 hover:decoration-slate-400 transition"
-                            >
-                              {showManualHookOverride ? 'Zwiń opcje ręczne' : 'Opcjonalne ręczne nadpisanie'}
-                            </button>
-                          )}
-                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowSwipeFileModal(true)}
+                          className="text-[11px] font-bold text-indigo-300 hover:text-indigo-200 bg-indigo-950/80 border border-indigo-500/40 hover:border-indigo-400 px-3 py-2 rounded-xl transition flex items-center justify-center gap-1.5 shadow-sm shrink-0 active:scale-95"
+                        >
+                          <Flame className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Baza Tematów & Hooków</span>
+                        </button>
                       </div>
+
+                      {selectedBankierArticle && (
+                        <div className="pt-2.5 border-t border-slate-800/80 flex items-center gap-2 text-[11px] text-amber-300/90 font-medium">
+                          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <span>
+                            Wybrany news z Bankier.pl: <strong className="text-white">"{selectedBankierArticle.title.slice(0, 70)}..."</strong> — Gemini automatycznie wygeneruje scenariusz 18s z lektorem i brandingiem raport-finansowy24.pl.
+                          </span>
+                        </div>
+                      )}
                     </div>
-
-                    {/* Optional Manual Override Accordion / Grid */}
-                    {(showManualHookOverride || viralHookFormula !== 'auto') && (
-                      <div className="space-y-2 pt-1">
-                        <div className="flex items-center justify-between text-[11px] text-slate-400 px-1">
-                          <span>Wybierz formułę tylko, jeśli chcesz wymusić konkretny styl:</span>
-                          {viralHookFormula !== 'auto' && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setViralHookFormula('auto');
-                                setShowManualHookOverride(false);
-                              }}
-                              className="text-emerald-400 hover:underline font-semibold"
-                            >
-                              Włącz z powrotem automat
-                            </button>
-                          )}
-                        </div>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
-                          {[
-                            {
-                              id: 'contrarian_claim',
-                              icon: '⚡',
-                              label: 'Contrarian Claim',
-                              formula: 'Banki NIE chcą...',
-                              desc: 'Zaskakujący fakt wbrew opinii'
-                            },
-                            {
-                              id: 'mistake_warning',
-                              icon: '⚠️',
-                              label: 'Mistake Warning',
-                              formula: 'Stop! Robisz błąd...',
-                              desc: 'Ostrzeżenie przed stratą'
-                            },
-                            {
-                              id: 'list_tease',
-                              icon: '📋',
-                              label: 'Ranking / Lista',
-                              formula: '3 rzeczy / błędy...',
-                              desc: 'Chęć zobaczenia całości'
-                            },
-                            {
-                              id: 'transformation',
-                              icon: '📈',
-                              label: 'Przed i Po',
-                              formula: '100 PLN ➔ 180k...',
-                              desc: 'Mocne zestawienie danych'
-                            },
-                            {
-                              id: 'myth_buster',
-                              icon: '💡',
-                              label: 'Obalanie Mitów',
-                              formula: 'Obalamy mit o...',
-                              desc: 'Walka z fałszywą opinią'
-                            }
-                          ].map((f) => (
-                            <button
-                              key={f.id}
-                              type="button"
-                              onClick={() => setViralHookFormula(f.id as any)}
-                              className={`p-2.5 text-left rounded-xl border text-xs transition flex flex-col justify-between gap-1.5 ${
-                                viralHookFormula === f.id
-                                  ? 'bg-amber-500/20 border-amber-500 text-amber-200 font-bold shadow-md shadow-amber-950/40 ring-1 ring-amber-500/60'
-                                  : 'bg-slate-950/80 border-slate-800 text-slate-400 hover:border-amber-500/40 hover:text-slate-200'
-                              }`}
-                            >
-                              <div className="flex items-center justify-between">
-                                <span className="text-base">{f.icon}</span>
-                                {viralHookFormula === f.id && (
-                                  <CheckCircle2 className="w-3.5 h-3.5 text-amber-400" />
-                                )}
-                              </div>
-                              <span className="font-bold text-white text-[11px] leading-tight">{f.label}</span>
-                              <span className="text-[10px] text-amber-300/90 font-mono font-medium line-clamp-1">{f.formula}</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
 
@@ -1705,7 +1585,6 @@ export const AiViralAutoPilot: React.FC<AiViralAutoPilotProps> = ({ onLoadScript
                       type="button"
                       onClick={() => {
                         setTopic(hook.hookText);
-                        setViralHookFormula(hook.formula);
                         setShowSwipeFileModal(false);
                         onToast?.('success', 'Wczytano Hook Viralowy', `Ustawiono temat: "${hook.title}"`);
                       }}

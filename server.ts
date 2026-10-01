@@ -1830,33 +1830,41 @@ function ensureRaportFinansowyCta(text: string, topic?: string): string {
 }
 
 // Built-in smart viral script engine fallback (activated when Gemini is unavailable or access is restricted)
-function buildSmartFallbackScript(topic: string, niche: string, language: string, count: number = 1) {
+function buildSmartFallbackScript(
+  topic: string,
+  niche: string,
+  language: string,
+  count: number = 2,
+  articleContext?: string,
+  bankierArticle?: any
+) {
   const isPl = !language || language.toLowerCase().includes('pol');
-  const tLower = (topic || '').toLowerCase();
+  const fullContext = `${topic || ''} ${bankierArticle?.title || ''} ${bankierArticle?.description || ''} ${articleContext || ''}`.toLowerCase();
+  const titleToUse = bankierArticle?.title || topic || 'Analiza Rynkowa';
 
   // Determine thematic motion graphics and keywords
   let theme = 'stock market candlestick chart';
   let videoIndex = 0;
 
-  if (tLower.includes('pieniądz') || tLower.includes('biznes') || tLower.includes('finans') || tLower.includes('gospodark') || tLower.includes('bankier') || tLower.includes('giełd') || tLower.includes('inwestycj') || tLower.includes('money')) {
+  if (fullContext.includes('pieniądz') || fullContext.includes('biznes') || fullContext.includes('finans') || fullContext.includes('gospodark') || fullContext.includes('bankier') || fullContext.includes('giełd') || fullContext.includes('inwestycj') || fullContext.includes('money')) {
     theme = 'stock market candlestick chart';
     videoIndex = 0;
-  } else if (tLower.includes('miasto') || tLower.includes('sukces') || tLower.includes('wieżowce') || tLower.includes('drapacz') || tLower.includes('metropoli') || tLower.includes('nieruchomośc')) {
+  } else if (fullContext.includes('miasto') || fullContext.includes('sukces') || fullContext.includes('wieżowce') || fullContext.includes('drapacz') || fullContext.includes('metropoli') || fullContext.includes('nieruchomośc')) {
     theme = 'city skyscrapers night';
     videoIndex = 1;
-  } else if (tLower.includes('ai') || tLower.includes('sztuczna') || tLower.includes('technol') || tLower.includes('komputer') || tLower.includes('kod') || tLower.includes('matrix') || tLower.includes('cyfr')) {
+  } else if (fullContext.includes('ai') || fullContext.includes('sztuczna') || fullContext.includes('technol') || fullContext.includes('komputer') || fullContext.includes('kod') || fullContext.includes('matrix') || fullContext.includes('cyfr')) {
     theme = 'digital code neural network';
     videoIndex = 2;
-  } else if (tLower.includes('walut') || tLower.includes('dolar') || tLower.includes('euro') || tLower.includes('złot') || tLower.includes('gotówk') || tLower.includes('cash')) {
+  } else if (fullContext.includes('walut') || fullContext.includes('dolar') || fullContext.includes('euro') || fullContext.includes('złot') || fullContext.includes('gotówk') || fullContext.includes('cash')) {
     theme = 'cash money counting';
     videoIndex = 3;
-  } else if (tLower.includes('mózg') || tLower.includes('psycholog') || tLower.includes('decyzj') || tLower.includes('nawyk') || tLower.includes('spokój') || tLower.includes('stres')) {
+  } else if (fullContext.includes('mózg') || fullContext.includes('psycholog') || fullContext.includes('decyzj') || fullContext.includes('nawyk') || fullContext.includes('spokój') || fullContext.includes('stres')) {
     theme = 'ocean waves cliff landscape';
     videoIndex = 6;
-  } else if (tLower.includes('auto') || tLower.includes('samochód') || tLower.includes('prędkoś') || tLower.includes('speed') || tLower.includes('adrenalin')) {
+  } else if (fullContext.includes('auto') || fullContext.includes('samochód') || fullContext.includes('prędkoś') || fullContext.includes('speed') || fullContext.includes('adrenalin')) {
     theme = 'luxury hypercar speed';
     videoIndex = 5;
-  } else if (tLower.includes('kosmos') || tLower.includes('gwiazd') || tLower.includes('wszechświat') || tLower.includes('filozof') || tLower.includes('space')) {
+  } else if (fullContext.includes('kosmos') || fullContext.includes('gwiazd') || fullContext.includes('wszechświat') || fullContext.includes('filozof') || fullContext.includes('space')) {
     theme = 'deep space galaxy stars';
     videoIndex = 7;
   }
@@ -1869,24 +1877,34 @@ function buildSmartFallbackScript(topic: string, niche: string, language: string
     let kw2 = 'business financial data growth';
 
     if (isPl) {
-      if (videoIndex === 0 || videoIndex === 3) {
-        s1Voiceover = 'Rynki kapitałowe nie nagradzają emocjonalnego pośpiechu, lecz żelazną dyscyplinę. Podczas gdy większość inwestorów kupuje euforię na lokalnych szczytach, największe zyski buduje się w ciszy podczas rynkowych panik.';
-        s2Voiceover = 'Zrozumienie psychologii tłumu i chłodna kalkulacja ryzyka to jedyna trwała przewaga konkurencyjna.';
+      if (fullContext.includes('rpp') || fullContext.includes('stóp') || fullContext.includes('stopy') || fullContext.includes('nbp') || fullContext.includes('rada polityki') || fullContext.includes('kredyt')) {
+        s1Voiceover = 'Banki nie chcą, żebyś o tym wiedział, ale najnowsze decyzje dotyczące stóp procentowych natychmiast uderzą w koszty kredytów i oszczędności. Dane z Bankier.pl potwierdzają gwałtowną zmianę kosztu pieniądza.';
+        s2Voiceover = 'Zrozumienie mechanizmu stóp procentowych pozwala zabezpieczyć płynność i uniknąć niepotrzebnego drenażu domowego budżetu.';
+        kw1 = 'central bank gold interest rate';
+        kw2 = 'financial trading floor candlestick';
+      } else if (fullContext.includes('podatek') || fullContext.includes('belk') || fullContext.includes('fiskus') || fullContext.includes('błąd') || fullContext.includes('kar') || fullContext.includes('strat') || fullContext.includes('prowizj')) {
+        s1Voiceover = 'Stop! Ten jeden błąd na Twoim koncie może kosztować Cię tysiące złotych rocznie. Najnowsze dane z Bankier.pl ujawniają, gdzie Polacy tracą najwięcej na podatkach i ukrytych prowizjach.';
+        s2Voiceover = 'Świadoma weryfikacja opłat i optymalizacja kapitałowa to fundament długoterminowej ochrony majątku przed inflacją.';
+        kw1 = 'tax investment mistake warning';
+        kw2 = 'financial compliance documentation';
+      } else if (fullContext.includes('akcj') || fullContext.includes('gpw') || fullContext.includes('wig') || fullContext.includes('orlen') || fullContext.includes('spółk') || fullContext.includes('giełd')) {
+        s1Voiceover = 'Wstrząs na warszawskiej giełdzie przyciąga uwagę największych graczy instytucjonalnych. Opublikowane na Bankier.pl odczyty rynkowe diametralnie zmieniają wyceny kluczowych spółek.';
+        s2Voiceover = 'Chłodna kalkulacja wskaźników fundamentalnych decyduje o zyskach w momentach podwyższonej zmienności rynkowej.';
         kw1 = 'stock market trading chart candlestick';
         kw2 = 'financial analytics corporate meeting';
+      } else if (fullContext.includes('inflacj') || fullContext.includes('drożyzn') || fullContext.includes('cen')) {
+        s1Voiceover = 'Stop! Nowe odczyty inflacji to alarm dla każdego, kto trzyma niepracujące oszczędności w gotówce. Realna siła nabywcza pieniądza topnieje w tempie, którego nie zrekompensują standardowe lokaty.';
+        s2Voiceover = 'Strategiczna dywersyfikacja i inwestycje w twarde aktywa to jedyna skuteczna tarcza kapitałowa.';
+        kw1 = 'cash money inflation counting';
+        kw2 = 'business financial data growth';
       } else if (videoIndex === 2) {
         s1Voiceover = 'Rewolucja sztucznej inteligencji nie zastępuje ludzi, lecz bezwzględnie weryfikuje ich tempo adaptacji. Automatyzacja powtarzalnych procesów uwalnia setki godzin na myślenie strategiczne.';
         s2Voiceover = 'Prawdziwą przewagę zdobywają specjaliści, którzy potrafią efektywnie dyrygować autonomicznymi modelami cyfrowymi.';
         kw1 = 'digital neural network cyber artificial intelligence';
         kw2 = 'futuristic technology server room data center';
-      } else if (videoIndex === 6) {
-        s1Voiceover = 'Mózg człowieka zużywa aż dwadzieścia procent energii organizmu, choć stanowi ułamek jego masy. Każda decyzja i rozproszenie cyfrowe drenuje cenne zasoby kory przedczołowej.';
-        s2Voiceover = 'Świadoma selekcja bodźców to klucz do utrzymania głębokiego skupienia i wybitnej produktywności każdego dnia.';
-        kw1 = 'ocean waves cliff sunset nature';
-        kw2 = 'person meditation focus calm landscape';
       } else {
-        s1Voiceover = 'Współczesny świat nagradza rzetelną wiedzę i precyzyjne decyzje, a nie powierzchowny szum informacyjny. Kiedy większość goni za trendami, liderzy analizują twarde fakty.';
-        s2Voiceover = 'Budowanie długoterminowej odporności i chłodne analityczne myślenie to fundament każdego trwałego sukcesu.';
+        s1Voiceover = 'Rynki finansowe nie nagradzają emocji, lecz żelazną dyscyplinę i twarde fakty z Bankier.pl. Podczas gdy większość goni za szumem medialnym, zyski buduje się na chłodnej analizie danych.';
+        s2Voiceover = 'Zrozumienie psychologii tłumu i precyzyjne zarządzanie ryzykiem to jedyna trwała przewaga w biznesie.';
         kw1 = 'modern city skyline architecture skyscrapers';
         kw2 = 'corporate executive strategic planning board';
       }
@@ -1897,7 +1915,7 @@ function buildSmartFallbackScript(topic: string, niche: string, language: string
       kw2 = 'modern skyscraper corporate skyline';
     }
 
-    const s2WithCta = ensureRaportFinansowyCta(s2Voiceover, topic);
+    const s2WithCta = ensureRaportFinansowyCta(s2Voiceover, titleToUse);
 
     const scenes = [
       {
@@ -1935,7 +1953,7 @@ function buildSmartFallbackScript(topic: string, niche: string, language: string
     ];
 
     return {
-      title: topic,
+      title: titleToUse,
       description: `#shorts #analiza #${niche.toLowerCase().replace(/\s+/g, '')} #wiedza | Sprawdź pełny raport: https://raport-finansowy24.pl`,
       hook: s1Voiceover.split('.')[0] + '.',
       language,
@@ -2036,11 +2054,11 @@ function buildSmartFallbackScript(topic: string, niche: string, language: string
   };
 }
 
-// Resilient Gemini Model Cascade: Prioritizes fast, reliable models and auto-switches if 503 (high demand) occurs
+// Resilient Gemini Model Cascade: Prioritizes fast, modern, reliable models and auto-switches if 503/429 occurs
 const GEMINI_MODEL_CASCADE = [
+  'gemini-3.8-flash',
   'gemini-2.5-flash',
   'gemini-3.1-flash-lite',
-  'gemini-3.8-flash',
   'gemini-flash-latest'
 ];
 
@@ -2071,71 +2089,87 @@ async function callGeminiWithCascade(params: {
   return null;
 }
 
-// Resilient Script Generator (Tries Gemini Model Cascade, gracefully falls back to smart template on any API error)
+// Resilient Script Generator: Automatically transforms Bankier.pl news content into viral hook scripts using Gemini
 async function generateSmartOrGeminiViralScript({
   topic = 'Rynki kapitałowe a dyscyplina inwestycyjna',
   niche = 'Finanse & Biznes',
   language = 'Polski',
   sceneCount = 2,
   articleContext,
-  viralHookFormula
+  bankierArticle
 }: {
   topic?: string;
   niche?: string;
   language?: string;
   sceneCount?: number;
   articleContext?: string;
+  bankierArticle?: any;
   viralHookFormula?: string;
 }) {
   const cleanTopic = (topic || 'Analiza rynkowa').trim();
   const count = Math.min(Math.max(Number(sceneCount) || 2, 1), 6);
 
-  let hookFormulaPromptInstruction = '';
-  if (!viralHookFormula || viralHookFormula === 'auto') {
-    hookFormulaPromptInstruction = `
-AUTONOMICZNY WYBÓR HOOKA PRZEZ AI (100% AUTOMATYZACJA - ZASADA 1-SEKUNDOWEJ DECYZJI):
-Użytkownik wybrał pełną automatyzację ("AI Auto-Pilot"). Przeanalizuj temat "${cleanTopic}" oraz dostarczone fakty i SAMODZIELNIE dopasuj najbardziej skuteczną psychologicznie formułę hooka w pierwszych 2 sekundach Sceny 1 (Zasada 1s):
-- Jeśli temat dotyczy podatków, inflacji, strat, prowizji, opłat lub błędów inwestorów: Zastosuj MISTAKE WARNING (np. "Stop! Jeśli trzymasz tam pieniądze...", "Ten błąd kosztuje Polaków tysiące...").
-- Jeśli temat dotyczy banków, stóp procentowych, rządu, ukrytych mechanizmów: Zastosuj CONTRARIAN CLAIM (np. "Banki NIE chcą, żebyś o tym wiedział...", "Prawda o stopach procentowych, o której milczą media...").
-- Jeśli temat to zestawienie, spółki giełdowe lub ranking: Zastosuj LIST / RANKING TEASE (np. "3 spółki / błędy, które natychmiast drenują Twój portfel...").
-- Jeśli temat dotyczy budowania majątku, ETF-ów, oszczędzania lub czasu: Zastosuj BEFORE & AFTER (np. "Oto co się stanie, gdy zainwestujesz 100 zł miesięcznie zamiast trzymać w banku...").
-- Jeśli temat to obalanie przekonań: Zastosuj MYTH BUSTER (np. "Obalamy największy mit o bezpiecznych lokatach...").
-Pierwsze zdanie w Scenie 1 MUSI być krótkie (maksymalnie 12-14 słów), dynamiczne i natychmiast zatrzymywać kciuk użytkownika na ekranie (Zero nudnego wstępu!).`;
-  } else if (viralHookFormula === 'contrarian_claim') {
-    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (CONTRARIAN CLAIM): Pierwsze zdanie w Scenie 1 MUSI rzucać wyzwanie powszechnej opinii lub ujawniać sekrety (np. "Banki / Media NIE chcą, żebyś o tym wiedział...", "Wszyscy robią to źle..."). Maksymalnie 12-14 słów.';
-  } else if (viralHookFormula === 'mistake_warning') {
-    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (MISTAKE WARNING): Pierwsze zdanie w Scenie 1 MUSI bezpośrednio ostrzegać przed kosztownym błędem finansowym (np. "Stop! Jeśli trzymasz tam pieniądze...", "Ten błąd kosztuje Cię tysiące rocznie..."). Maksymalnie 12-14 słów.';
-  } else if (viralHookFormula === 'list_tease') {
-    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (LIST / RANKING TEASE): Pierwsze zdanie w Scenie 1 MUSI otwierać zestawienie lub ranking budzący ciekawość (np. "3 błędy finansowe / ranking miejsc, w których tracisz oszczędności..."). Maksymalnie 14 słów.';
-  } else if (viralHookFormula === 'transformation') {
-    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (BEFORE & AFTER TRANSFORMATION): Pierwsze zdanie w Scenie 1 MUSI stawiać mocny, skrajny kontrast finansowy (np. "Co się stanie, gdy zainwestujesz 100 PLN miesięcznie w ETF zamiast trzymać w banku...").';
-  } else if (viralHookFormula === 'myth_buster') {
-    hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (MYTH BUSTER): Pierwsze zdanie w Scenie 1 MUSI bezpośrednio obalać popularny mit rynkowy (np. "Obalamy powszechny mit o oszczędnościach w bankach...").';
+  // Construct structured Bankier.pl news context
+  let bankierNewsSection = '';
+  if (bankierArticle && typeof bankierArticle === 'object') {
+    bankierNewsSection = `
+=== DANE NEWSA ŹRÓDŁOWEGO Z BANKIER.PL ===
+Tytuł artykułu: "${bankierArticle.title || cleanTopic}"
+Kategoria rynkowa: ${bankierArticle.category || niche}
+Podsumowanie / Fakty: "${bankierArticle.description || bankierArticle.summary || ''}"
+${bankierArticle.keyTakeaway ? `Kluczowy wniosek analityczny: "${bankierArticle.keyTakeaway}"` : ''}
+${bankierArticle.suggestedHook ? `Sugerowany kierunek hooka: "${bankierArticle.suggestedHook}"` : ''}
+${Array.isArray(bankierArticle.suggestedSearchKeywords) && bankierArticle.suggestedSearchKeywords.length > 0 ? `Sugerowane ujęcia wizualne: ${bankierArticle.suggestedSearchKeywords.join(', ')}` : ''}
+==========================================`;
+  } else if (articleContext && articleContext.trim()) {
+    bankierNewsSection = `
+=== KONTEKST ARTYKUŁU / NEWSA Z BANKIER.PL ===
+${articleContext.trim()}
+==============================================`;
   }
 
-  try {
-    const contextInfo = articleContext ? `\n\nDodatkowy kontekst / treść artykułu źródłowego:\n"${articleContext}"\nWykorzystaj te fakty, aby scenariusz był rzetelny, aktualny i merytoryczny.` : '';
-    
-    const prompt = count === 2
-      ? `Jesteś elitarnym twórcą viralowych formatów wideo dla portalu raport-finansowy24.pl (w stylu CNBC, Bloomberg, Hormozi).
-Stwórz wysoce merytoryczny, porywający scenariusz na 18-sekundowy film (DOKŁADNIE 2 uzupełniające się sceny po 9 sekund każda, duration = 9.0s na scenę, łącznie 18 sekund filmu) w języku: ${language} na temat: "${cleanTopic}" (Kategoria: ${niche}).${contextInfo}${hookFormulaPromptInstruction}
-WYMÓG DYNAMIKI I JAKOŚCI VIRALOWEJ (2 różne ujęcia wideo Pexels po 9s):
-- Całkowity ZAKAZ taniego clickbaitu, infantylnych powitań ('Cześć!', 'Czy wiesz że?'), banałów i wykrzykników.
+  const autonomousPromptInstructions = `
+AUTONOMICZNA SYNTEZA VIRALOWA NA PODSTAWIE NEWSA Z BANKIER.PL (GEMINI AI):
+Zero manualnego wyboru po stronie użytkownika. Jako elitarny analityk finansowy i twórca wirali dla portalu raport-finansowy24.pl (format Shorts/Reels/TikTok 9:16), przeanalizuj treść newsa z Bankier.pl, wyodrębnij kluczowe liczby i fakty, zidentyfikuj główne źródło napięcia emocjonalnego i SAMODZIELNIE dopasuj najsilniejszą psychologicznie formułę hooka w pierwszych 2 sekundach (Zasada 1-sekundowej decyzji widza):
+1. OSTRZEŻENIE PRZED STRATĄ (MISTAKE WARNING): Jeśli artykuł dotyczy podatków, inflacji, strat, opłat bankowych, spadków giełdowych lub kosztownych błędów (np. "Stop! Jeśli masz konto w polskim banku...", "Stop! Te nowe przepisy zabiorą Ci tysiące rocznie...").
+2. CONTRARIAN CLAIM / UJAWNIENIE PRAWDY: Jeśli news dotyczy banków, stóp procentowych RPP, decyzji NBP, instytucji państwowych lub ukrytych mechanizmów rynkowych (np. "Banki NIE chcą, żebyś o tym wiedział...", "Prawda o stopach procentowych, o której milczą główne media...").
+3. RANKING / ZESTAWIENIE GIEŁDOWE: Jeśli news to zestawienie spółek z GPW, walut, surowców, nieruchomości lub wskaźników rynkowych (np. "Oto 3 spółki z GPW, które właśnie...", "Ranking miejsc, gdzie Polacy tracą najwięcej oszczędności...").
+4. PRZED I PO / KONTRAST DANYCH: Jeśli news dotyczy zysków, budowania majątku, ETF-ów, emerytury lub procentu składanego (np. "Zamiast trzymać 1000 zł w banku na 4%, zobacz co się dzieje...").
+5. OBALANIE MITU: Jeśli news obala powszechne przekonanie rynkowe (np. "Obalamy największy mit o bezpiecznych lokatach bankowych w dobie realnej inflacji...").
+
+WYMÓG DYNAMIKI, FAKTÓW I JAKOŚCI VIRALOWEJ (DOKŁADNIE 2 uzupełniające się sceny po 9s = 18.0s filmu):
+- Całkowity ZAKAZ taniego clickbaitu bez pokrycia, infantylnych powitań ('Cześć!', 'Czy wiesz że?'), banałów i wykrzykników.
+- ZAKOTWICZENIE W FAKTACH Z BANKIER.PL: W Scenie 1 i 2 MUSI paść twardy fakt, wskaźnik lub konkretna liczba wyjęta wprost z artykułu z Bankier.pl!
 - STRUKTURA 2 SCEN:
-  1. SCENA 1 (duration = 9.0, ok. 20-24 słowa w języku ${language}): Błyskawiczny hook przyciągający uwagę w 1. sekundzie i twarda teza analityczna. Angielskie zapytanie "searchKeyword" do pierwszego ujęcia wideo Pexels (np. "stock market trading candlestick chart").
-  2. SCENA 2 (duration = 9.0, ok. 20-24 słowa w języku ${language}): Mechanizm przyczynowo-skutkowy, strategiczny wniosek oraz OBOWIĄZKOWE KOŃCOWE CTA dopasowane do tematu na samym końcu wypowiedzi (np. "Więcej raportów i kalkulatorów znajdziesz na raport-finansowy24.pl." lub "Sprawdź pełną analizę na raport-finansowy24.pl."). Drugie, inne angielskie zapytanie "searchKeyword" do drugiego, komplementarnego ujęcia wideo Pexels (np. "digital network corporate skyline night").
+  1. SCENA 1 (duration = 9.0s, ok. 20-24 słowa w języku ${language}):
+     * Otwarcie: Błyskawiczny, hipnotyzujący hook (maksymalnie 12-14 słów), który natychmiast zatrzymuje kciuk użytkownika na ekranie.
+     * Rozwinięcie: Twardy fakt lub szokująca liczba z artykułu Bankier.pl.
+     * Angielskie zapytanie "searchKeyword" do pierwszego ujęcia wideo Pexels dobrane wprost pod treść newsa (np. "stock market candlestick chart red", "bank central vault gold money", "poland inflation currency cash").
+  2. SCENA 2 (duration = 9.0s, ok. 20-24 słowa w języku ${language}):
+     * Mechanizm przyczynowo-skutkowy, strategiczny wniosek dla portfela widza.
+     * OBOWIĄZKOWE KOŃCOWE CTA NA SAMYM KOŃCU WYPOWIEDZI: Wypowiedź lektora ("voiceover_text" oraz "subtitles") na samym końcu MUSI zawierać płynnie wkomponowane wezwanie do odwiedzenia portalu:
+       "Sprawdź pełną analizę na raport-finansowy24.pl." lub "Więcej raportów i kalkulatorów znajdziesz na raport-finansowy24.pl."
+     * Drugie, inne angielskie zapytanie "searchKeyword" do drugiego, komplementarnego ujęcia wideo Pexels (np. "digital network corporate skyline night", "financial analyst trading desk").
 - Wymagane pola JSON:
-  1. "title": Poważny, chwytliwy tytuł analityczny w języku (${language})
+  1. "title": Poważny, chwytliwy tytuł analityczny w języku (${language}) oparty na newsie z Bankier.pl
   2. "description": Krótki opis z hashtagami (#shorts #analiza #finanse | Sprawdź na https://raport-finansowy24.pl)
-  3. "hook": Pierwsze zdanie wypowiedzi ze sceny 1
+  3. "hook": Pierwsze zdanie wypowiedzi ze sceny 1 (dokładny hook)
   4. "scenes": Tablica z DOKŁADNIE 2 obiektami:
      - Scena 1: { "subtitles": string, "voiceover_text": string, "duration": 9.0, "searchKeyword": string }
      - Scena 2: { "subtitles": string, "voiceover_text": string, "duration": 9.0, "searchKeyword": string } (kończy się CTA do raport-finansowy24.pl)
   5. "backgroundMusicUrl": "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
-  6. "audioVolume": 0.25`
+  6. "audioVolume": 0.25`;
+
+  try {
+    const prompt = count === 2
+      ? `Jesteś elitarnym twórcą viralowych formatów wideo dla portalu raport-finansowy24.pl (w stylu CNBC, Bloomberg, Hormozi).
+Stwórz wysoce merytoryczny, porywający scenariusz na 18-sekundowy film (DOKŁADNIE 2 uzupełniające się sceny po 9 sekund każda, duration = 9.0s na scenę, łącznie 18 sekund filmu) w języku: ${language} na temat: "${cleanTopic}" (Kategoria: ${niche}).
+${bankierNewsSection}
+${autonomousPromptInstructions}`
       : count === 1
       ? `Jesteś elitarnym analitykiem biznesowym, publicystą ekonomiczno-technologicznym i lektorem topowych formatów wiedzy (w stylu Bloomberg Originals, Vox, CNBC).
-Stwórz wysoce merytoryczny, gotowy scenariusz na 1 spójną, 18-sekundową scenę (DOKŁADNIE 1 scena, czas duration = 18.0) w języku: ${language} na temat: "${cleanTopic}" (Kategoria: ${niche}).${contextInfo}
+Stwórz wysoce merytoryczny, gotowy scenariusz na 1 spójną, 18-sekundową scenę (DOKŁADNIE 1 scena, czas duration = 18.0) w języku: ${language} na temat: "${cleanTopic}" (Kategoria: ${niche}).
+${bankierNewsSection}
 WYMÓG JAKOŚCI NARRACJI (inteligentna, dojrzała wypowiedź lektora):
 - Całkowity ZAKAZ taniego clickbaitu, infantylnych powitań ('Cześć!', 'Czy wiesz że?'), banałów i wykrzykników.
 - OBOWIĄZKOWE CTA NA SAMYM KOŃCU WYPOWIEDZI: Wypowiedź lektora ("voiceover_text" oraz "subtitles") na samym końcu MUSI zawierać naturalnie wkomponowane CTA dopasowane do tematu kierujące do portalu: np. "Sprawdź pełną analizę na raport-finansowy24.pl." lub "Szczegółowe wskaźniki spółek znajdziesz na raport-finansowy24.pl." lub "Więcej raportów i danych sprawdzisz na raport-finansowy24.pl."
@@ -2147,7 +2181,7 @@ WYMÓG JAKOŚCI NARRACJI (inteligentna, dojrzała wypowiedź lektora):
      - "subtitles": Dokładnie ta sama treść co "voiceover_text" (zostanie zsynchronizowana z lektorem i animowana słowo po słowie)
      - "voiceover_text": Kompletna, przemyślana, mądra wypowiedź lektora (DOKŁADNIE 40 do 48 słów w języku ${language}, zakończona CTA do raport-finansowy24.pl), którą profesjonalny lektor przeczyta płynnie w 18 sekund.
        Struktura merytoryczna:
-       * Zaskakująca, rzetelna teza analityczna lub twardy fakt gospodarczy/technologiczny.
+       * Zaskakująca, rzetelna teza analityczna lub twardy fakt gospodarczy/technologiczny z newsa Bankier.pl.
        * Konkretny mechanizm przyczynowo-skutkowy lub dane.
        * Strategiczny wniosek dla widza.
        * Końcowe CTA: "Sprawdź na raport-finansowy24.pl." lub "Więcej danych znajdziesz na raport-finansowy24.pl."
@@ -2155,18 +2189,9 @@ WYMÓG JAKOŚCI NARRACJI (inteligentna, dojrzała wypowiedź lektora):
      - "searchKeyword": Precyzyjne angielskie zapytanie dla wideo Pexels do pobrania ruchomej grafiki w tle (np. "stock market candlestick chart", "city skyscrapers night drone", "digital code neural network", "cash money counting")
   5. "backgroundMusicUrl": "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
   6. "audioVolume": 0.25`
-      : `Jesteś ekspertem analitycznych filmów YouTube Shorts / TikTok. Stwórz porywający, merytoryczny scenariusz na krótki wideo-short (9:16) w języku: ${language} na temat: "${cleanTopic}" (Kategoria: ${niche}).${contextInfo}
-Wymagania:
-1. "title": Chwytliwy, merytoryczny tytuł filmu w języku (${language})
-2. "description": Krótki opis w języku (${language}) z hashtagami (#shorts #viral #${niche.toLowerCase().replace(/\s+/g, '')} | Sprawdź na https://raport-finansowy24.pl)
-3. "hook": Silny otwierający hook (1 zdanie) w języku (${language})
-4. "scenes": Tablica zawierająca ${count} obiekty scen z polami (ostatnia scena MUSI kończyć się CTA z adresem raport-finansowy24.pl):
-   - "subtitles": Krótki, uderzający napis merytoryczny w języku (${language})
-   - "voiceover_text": Rzetelna, mądra narracja lektora (10-15 słów na scenę, ostatnia scena z CTA do raport-finansowy24.pl)
-   - "duration": Czas trwania sceny w sekundach (od 3.5 do 6.0)
-   - "searchKeyword": Angielskie słowo kluczowe klimatu tła do szukania filmu wideo Pexels
-5. "backgroundMusicUrl": "https://assets.mixkit.co/music/preview/mixkit-tech-house-vibes-130.mp3"
-6. "audioVolume": 0.25`;
+      : `Jesteś ekspertem analitycznych filmów YouTube Shorts / TikTok. Stwórz porywający, merytoryczny scenariusz na krótki wideo-short (9:16) w języku: ${language} na temat: "${cleanTopic}" (Kategoria: ${niche}).
+${bankierNewsSection}
+${autonomousPromptInstructions}`;
 
     const geminiResult = await callGeminiWithCascade({
       contents: prompt,
@@ -2259,7 +2284,7 @@ Wymagania:
     console.warn('⚠️ [Gemini Script Catch] Processing error (' + (err as Error).message + '). Generating optimized heuristic viral script.');
   }
 
-  return buildSmartFallbackScript(cleanTopic, niche, language, count);
+  return buildSmartFallbackScript(cleanTopic, niche, language, count, articleContext, bankierArticle);
 }
 
 // Resilient Translation Generator (Tries Gemini Model Cascade, gracefully falls back on API error)
@@ -2472,8 +2497,22 @@ Wymagania JSON:
 // Endpoint: AI Script & Shorts Generator (/api/generate-viral-script)
 router.post('/generate-viral-script', async (req, res) => {
   try {
-    const { topic = 'Rynki kapitałowe i dyscyplina inwestycyjna', niche = 'Finanse & Biznes', sceneCount = 1, language = 'Polski', articleContext, viralHookFormula } = req.body;
-    const script = await generateSmartOrGeminiViralScript({ topic, niche, sceneCount, language, articleContext, viralHookFormula });
+    const {
+      topic = 'Rynki kapitałowe i dyscyplina inwestycyjna',
+      niche = 'Finanse & Biznes',
+      sceneCount = 2,
+      language = 'Polski',
+      articleContext,
+      bankierArticle
+    } = req.body;
+    const script = await generateSmartOrGeminiViralScript({
+      topic,
+      niche,
+      sceneCount,
+      language,
+      articleContext,
+      bankierArticle
+    });
     return res.json(script);
   } catch (error) {
     console.error('Error generating viral script:', error);
@@ -2548,9 +2587,9 @@ router.post('/auto-pilot-shorts', async (req, res) => {
         topic: topicToUse,
         niche,
         language,
-        sceneCount: body.sceneCount || 1,
+        sceneCount: body.sceneCount || 2,
         articleContext: body.articleContext,
-        viralHookFormula: body.viralHookFormula
+        bankierArticle: body.bankierArticle
       });
 
       title = scriptData.title || topicToUse;
