@@ -2091,7 +2091,17 @@ async function generateSmartOrGeminiViralScript({
   const count = Math.min(Math.max(Number(sceneCount) || 2, 1), 6);
 
   let hookFormulaPromptInstruction = '';
-  if (viralHookFormula === 'contrarian_claim') {
+  if (!viralHookFormula || viralHookFormula === 'auto') {
+    hookFormulaPromptInstruction = `
+AUTONOMICZNY WYBÓR HOOKA PRZEZ AI (100% AUTOMATYZACJA - ZASADA 1-SEKUNDOWEJ DECYZJI):
+Użytkownik wybrał pełną automatyzację ("AI Auto-Pilot"). Przeanalizuj temat "${cleanTopic}" oraz dostarczone fakty i SAMODZIELNIE dopasuj najbardziej skuteczną psychologicznie formułę hooka w pierwszych 2 sekundach Sceny 1 (Zasada 1s):
+- Jeśli temat dotyczy podatków, inflacji, strat, prowizji, opłat lub błędów inwestorów: Zastosuj MISTAKE WARNING (np. "Stop! Jeśli trzymasz tam pieniądze...", "Ten błąd kosztuje Polaków tysiące...").
+- Jeśli temat dotyczy banków, stóp procentowych, rządu, ukrytych mechanizmów: Zastosuj CONTRARIAN CLAIM (np. "Banki NIE chcą, żebyś o tym wiedział...", "Prawda o stopach procentowych, o której milczą media...").
+- Jeśli temat to zestawienie, spółki giełdowe lub ranking: Zastosuj LIST / RANKING TEASE (np. "3 spółki / błędy, które natychmiast drenują Twój portfel...").
+- Jeśli temat dotyczy budowania majątku, ETF-ów, oszczędzania lub czasu: Zastosuj BEFORE & AFTER (np. "Oto co się stanie, gdy zainwestujesz 100 zł miesięcznie zamiast trzymać w banku...").
+- Jeśli temat to obalanie przekonań: Zastosuj MYTH BUSTER (np. "Obalamy największy mit o bezpiecznych lokatach...").
+Pierwsze zdanie w Scenie 1 MUSI być krótkie (maksymalnie 12-14 słów), dynamiczne i natychmiast zatrzymywać kciuk użytkownika na ekranie (Zero nudnego wstępu!).`;
+  } else if (viralHookFormula === 'contrarian_claim') {
     hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (CONTRARIAN CLAIM): Pierwsze zdanie w Scenie 1 MUSI rzucać wyzwanie powszechnej opinii lub ujawniać sekrety (np. "Banki / Media NIE chcą, żebyś o tym wiedział...", "Wszyscy robią to źle..."). Maksymalnie 12-14 słów.';
   } else if (viralHookFormula === 'mistake_warning') {
     hookFormulaPromptInstruction = '\nFORMUŁA HOOKA (MISTAKE WARNING): Pierwsze zdanie w Scenie 1 MUSI bezpośrednio ostrzegać przed kosztownym błędem finansowym (np. "Stop! Jeśli trzymasz tam pieniądze...", "Ten błąd kosztuje Cię tysiące rocznie..."). Maksymalnie 12-14 słów.';
